@@ -112,7 +112,7 @@ const fragmentShader = `
   void main() {
     vec3 color = uColor;
     // Color based on elevation
-    color = mix(color, vec3(1.0), vElevation * 0.2);
+    // color = mix(color, vec3(1.0), vElevation * 0.2);
     gl_FragColor = vec4(color, 1.0);
   }
 `;
@@ -121,10 +121,10 @@ export default function Plane() {
     const meshRef = useRef();
 
     const { color, gridWidth, gridHeight, noiseIntensity, mountainHeight } = useControls({
-        color: '#0000ff',
-        gridWidth: { value: 20, min: 10, max: 100, step: 1 },
-        gridHeight: { value: 20, min: 10, max: 100, step: 1 },
-        noiseIntensity: { value: 1.0, min: 0, max: 3, step: 0.1 },
+        color: '#2e8fff',
+        gridWidth: { value: 30, min: 10, max: 100, step: 1 },
+        gridHeight: { value: 30, min: 10, max: 100, step: 1 },
+        noiseIntensity: { value: 1.3, min: 0, max: 3, step: 0.1 },
         mountainHeight: { value: 4.0, min: 1, max: 10, step: 0.5 }
     });
 
@@ -143,7 +143,7 @@ export default function Plane() {
 
     return (
         <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]}>
-            <planeGeometry args={[10, 10, gridWidth, gridHeight]} />
+            <planeGeometry args={[20, 10, gridWidth, gridHeight]} />
             <shaderMaterial
                 vertexShader={vertexShader}
                 fragmentShader={fragmentShader}
