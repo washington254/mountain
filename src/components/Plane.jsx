@@ -1,6 +1,5 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import { useControls } from 'leva';
-import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 const vertexShader = `
@@ -83,13 +82,9 @@ const vertexShader = `
     // Distance from center
     float dist = length(pos.xy);
     
-    // Create cone/mountain shape with flatter peak
+    // Create cone/mountain shape
     float mountainShape = max(0.0, 1.0 - dist / 5.0);
     mountainShape = pow(mountainShape, 1.5);
-    
-    // Flatten the peak - reduce height when very close to center
-    float peakFlatten = smoothstep(0.0, 1.5, dist); // Flat within 1.5 units of center
-    mountainShape *= mix(0.85, 1.0, peakFlatten); // Reduce peak height by 15%
     
     // Add noise only at the peak (where mountainShape is high)
     float noise = 0.0;
@@ -101,6 +96,10 @@ const vertexShader = `
     
     // Combine: base mountain shape + noise at the top
     float elevation = mountainShape * uMountainHeight + noise * mountainShape * uNoiseIntensity;
+    
+    // Cut off the top of the mountain with a flat cap
+    float capHeight = 3.0; // Height at which to cut the mountain
+    elevation = min(elevation, capHeight);
     
     pos.z += elevation;
     vElevation = elevation;
@@ -122,105 +121,14 @@ const fragmentShader = `
   }
 `;
 
-function MovingLines({ lineColor, lineSpeed, lineCount, mountainHeight }) {
-  const linesRef = useRef();
-  const lineDataRef = useRef([]);
-  const initializedRef = useRef(false);
 
-  // Calculate elevation matching the shader
-  const getElevation = (x, y) => {
-    const dist = Math.sqrt(x * x + y * y);
-    let mountainShape = Math.max(0, 1.0 - dist / 5.0);
-    mountainShape = Math.pow(mountainShape, 1.5);
-    return mountainShape * mountainHeight;
-  };
-
-  // Initialize line data immediately
-  if (!initializedRef.current) {
-    lineDataRef.current = Array(lineCount).fill(0).map((_, i) => ({
-      angle: (i / lineCount) * Math.PI * 2,
-      progress: 0,
-    }));
-    initializedRef.current = true;
-  }
-
-  useEffect(() => {
-    // Reinitialize if lineCount changes with uniform distribution
-    lineDataRef.current = Array(lineCount).fill(0).map((_, i) => ({
-      angle: (i / lineCount) * Math.PI * 2,
-      progress: 0,
-    }));
-  }, [lineCount]);
-
-  useFrame((_, delta) => {
-    if (!linesRef.current || lineDataRef.current.length === 0) return;
-
-    const positions = linesRef.current.geometry.attributes.position.array;
-    const minRadius = 2;
-
-    for (let i = 0; i < lineCount; i++) {
-      const lineData = lineDataRef.current[i];
-      if (!lineData) continue;
-
-      // Update progress (move toward center)
-      lineData.progress += delta * lineSpeed;
-      if (lineData.progress > 1) {
-        lineData.progress = 0;
-        // Keep the same angle for uniform distribution
-      }
-
-      // Calculate current radius (from edge to center all the way to 0)
-      const currentRadius = 10 * (1 - lineData.progress);
-
-      // Small line segment length
-      const segmentLength = 0.02;
-      const prevProgress = Math.max(0, lineData.progress - segmentLength);
-      const prevRadius = 10 * (1 - prevProgress);
-
-      // Calculate positions along the angle
-      const x1 = Math.cos(lineData.angle) * prevRadius;
-      const y1 = Math.sin(lineData.angle) * prevRadius;
-      const z1 = getElevation(x1, y1);
-
-      const x2 = Math.cos(lineData.angle) * currentRadius;
-      const y2 = Math.sin(lineData.angle) * currentRadius;
-      const z2 = getElevation(x2, y2);
-
-      // Set line segment positions
-      positions[i * 6] = x1;
-      positions[i * 6 + 1] = y1;
-      positions[i * 6 + 2] = z1 + 0.05;
-      positions[i * 6 + 3] = x2;
-      positions[i * 6 + 4] = y2;
-      positions[i * 6 + 5] = z2 + 0.05;
-    }
-
-    linesRef.current.geometry.attributes.position.needsUpdate = true;
-  });
-
-  const positions = new Float32Array(lineCount * 6);
-
-  return (
-    <lineSegments ref={linesRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={lineCount * 2}
-          array={positions}
-          itemSize={3}
-        />
-      </bufferGeometry>
-      <lineBasicMaterial color={lineColor} transparent opacity={0.8} />
-    </lineSegments>
-  );
-}
 export default function Plane() {
   const meshRef = useRef();
 
   const { color, gridWidth, gridHeight, noiseIntensity, mountainHeight, lineColor, lineSpeed, lineCount } = useControls({
     color: '#2e8fff',
-    gridWidth: { value: 70, min: 10, max: 100, step: 1 },
-    gridHeight: { value: 70, min: 10, max: 100, step: 1 },
+    gridWidth: { value: 30, min: 10, max: 100, step: 1 },
+    gridHeight: { value: 30, min: 10, max: 100, step: 1 },
     noiseIntensity: { value: 1., min: 0, max: 3, step: 0.1 },
     mountainHeight: { value: 4.0, min: 1, max: 10, step: 0.5 },
     lineColor: '#00ffff',
@@ -241,23 +149,49 @@ export default function Plane() {
     uniforms.current.uMountainHeight.value = mountainHeight;
   }, [color, noiseIntensity, mountainHeight]);
 
+  // Create custom grid lines (only horizontal and vertical, no diagonals)
+  const gridLines = useMemo(() => {
+    const geometry = new THREE.BufferGeometry();
+    const positions = [];
+
+    const width = 10;
+    const height = 10;
+    const segmentsX = gridWidth;
+    const segmentsY = gridHeight;
+
+    // Horizontal lines
+    for (let i = 0; i <= segmentsY; i++) {
+      const y = (i / segmentsY - 0.5) * height;
+      for (let j = 0; j < segmentsX; j++) {
+        const x1 = (j / segmentsX - 0.5) * width;
+        const x2 = ((j + 1) / segmentsX - 0.5) * width;
+        positions.push(x1, y, 0, x2, y, 0);
+      }
+    }
+
+    // Vertical lines
+    for (let i = 0; i <= segmentsX; i++) {
+      const x = (i / segmentsX - 0.5) * width;
+      for (let j = 0; j < segmentsY; j++) {
+        const y1 = (j / segmentsY - 0.5) * height;
+        const y2 = ((j + 1) / segmentsY - 0.5) * height;
+        positions.push(x, y1, 0, x, y2, 0);
+      }
+    }
+
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    return geometry;
+  }, [gridWidth, gridHeight]);
+
   return (
     <>
-      <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]}>
-        <planeGeometry args={[20, 20, gridWidth, gridHeight]} />
+      <lineSegments ref={meshRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, -6]} geometry={gridLines}>
         <shaderMaterial
           vertexShader={vertexShader}
           fragmentShader={fragmentShader}
           uniforms={uniforms.current}
-          wireframe
         />
-      </mesh>
-      <MovingLines
-        lineColor={lineColor}
-        lineSpeed={lineSpeed}
-        lineCount={lineCount}
-        mountainHeight={mountainHeight - .5}
-      />
+      </lineSegments>
     </>
   );
 }
