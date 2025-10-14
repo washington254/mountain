@@ -12,7 +12,7 @@ function App() {
     cloudScale: { value: 0.25, min: 0.05, max: 1, step: 0.05 },
     cloudOpacity: { value: 0.3, min: 0.1, max: 1, step: 0.05 },
     cloudSpeed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
-    bloom: {value:2.4,min:0,max:5,step:0.1}
+    bloom: {value:4,min:0,max:5,step:0.1}
   });
 
   // Calculate cloud positions in a circle
@@ -31,7 +31,12 @@ function App() {
     <>
       <div className="relative w-full h-screen">
         <Canvas flat shadows camera={{ position: [0, 0, 10], fov:60 }}>
-          <OrbitControls target={[0, 0, 0]} />
+          <OrbitControls 
+            target={[0, 0, 0]} 
+            maxPolarAngle={Math.PI / 2}
+            minPolarAngle={0}
+            enablePan={false}
+          />
           <ambientLight intensity={Math.PI / 2} />
           <Plane />
 
