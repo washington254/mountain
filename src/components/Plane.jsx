@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo } from 'react';
+import { useRef, useEffect } from 'react';
 import { useControls } from 'leva';
 import * as THREE from 'three';
 
@@ -7,6 +7,8 @@ const vertexShader = `
   varying float vElevation;
   uniform float uNoiseIntensity;
   uniform float uMountainHeight;
+  uniform float uCraterHeight;
+  uniform float uCraterAngle;
   
   // 3D Simplex noise function
   vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -101,6 +103,12 @@ const vertexShader = `
     // Combine: base mountain shape + noise at the top
     float elevation = mountainShape * uMountainHeight + noise * mountainShape * uNoiseIntensity;
     
+    // Cut the top with an angled plane (crater effect)
+    // The cutting plane tilts based on the angle - affects height based on x position
+    float angleRadians = radians(uCraterAngle);
+    float tiltedCraterHeight = uCraterHeight + pos.x * tan(angleRadians);
+    elevation = min(elevation, tiltedCraterHeight);
+    
     pos.z += elevation;
     vElevation = elevation;
     
@@ -132,21 +140,22 @@ const fragmentShader = `
 export default function Plane() {
   const meshRef = useRef();
 
-  const { color, gridWidth, gridHeight, noiseIntensity, mountainHeight, lineColor, lineSpeed, lineCount } = useControls({
+  const { color, gridWidth, gridHeight, noiseIntensity, mountainHeight, craterHeight, craterAngle } = useControls({
     color: '#2e8fff',
     gridWidth: { value: 70, min: 10, max: 100, step: 1 },
     gridHeight: { value: 70, min: 10, max: 100, step: 1 },
-    noiseIntensity: { value: 1., min: 0, max: 3, step: 0.1 },
-    mountainHeight: { value: 4.0, min: 1, max: 10, step: 0.5 },
-    lineColor: '#00ffff',
-    lineSpeed: { value: 0.14, min: 0.1, max: 2, step: 0.1 },
-    lineCount: { value: 100, min: 10, max: 100, step: 5 }
+    noiseIntensity: { value: .7, min: 0, max: 3, step: 0.1 },
+    mountainHeight: { value: 5.0, min: 1, max: 10, step: 0.5 },
+    craterHeight: { value: 3.4, min: 0, max: 10, step: 0.1 },
+    craterAngle: { value: 10, min: -45, max: 45, step: 1 }
   });
 
   const uniforms = useRef({
     uColor: { value: new THREE.Color(color) },
     uNoiseIntensity: { value: noiseIntensity },
-    uMountainHeight: { value: mountainHeight }
+    uMountainHeight: { value: mountainHeight },
+    uCraterHeight: { value: craterHeight },
+    uCraterAngle: { value: craterAngle }
   });
 
   // Update uniforms in real-time
@@ -154,12 +163,14 @@ export default function Plane() {
     uniforms.current.uColor.value.set(color);
     uniforms.current.uNoiseIntensity.value = noiseIntensity;
     uniforms.current.uMountainHeight.value = mountainHeight;
-  }, [color, noiseIntensity, mountainHeight]);
+    uniforms.current.uCraterHeight.value = craterHeight;
+    uniforms.current.uCraterAngle.value = craterAngle;
+  }, [color, noiseIntensity, mountainHeight, craterHeight, craterAngle]);
 
   return (
     <>
-      <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, -4]}>
-        <planeGeometry args={[10, 10, gridWidth, gridHeight]} />
+      <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, -7]}>
+        <planeGeometry args={[20, 10, gridWidth, gridHeight]} />
         <shaderMaterial
           vertexShader={vertexShader}
           fragmentShader={fragmentShader}
