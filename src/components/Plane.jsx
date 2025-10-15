@@ -82,9 +82,13 @@ const vertexShader = `
     // Distance from center
     float dist = length(pos.xy);
     
-    // Create cone/mountain shape
+    // Create cone/mountain shape with flatter peak
     float mountainShape = max(0.0, 1.0 - dist / 5.0);
     mountainShape = pow(mountainShape, 1.5);
+    
+    // Flatten the peak - reduce height when very close to center
+    float peakFlatten = smoothstep(0.0, 1.5, dist); // Flat within 1.5 units of center
+    mountainShape *= mix(0.85, 1.0, peakFlatten); // Reduce peak height by 15%
     
     // Add noise only at the peak (where mountainShape is high)
     float noise = 0.0;
@@ -97,10 +101,6 @@ const vertexShader = `
     // Combine: base mountain shape + noise at the top
     float elevation = mountainShape * uMountainHeight + noise * mountainShape * uNoiseIntensity;
     
-    // Cut off the top of the mountain with a flat cap
-    float capHeight = 3.0; // Height at which to cut the mountain
-    elevation = min(elevation, capHeight);
-    
     pos.z += elevation;
     vElevation = elevation;
     
@@ -112,14 +112,21 @@ const fragmentShader = `
   varying vec2 vUv;
   varying float vElevation;
   uniform vec3 uColor;
+  uniform float uMountainHeight;
   
   void main() {
     vec3 color = uColor;
-    // Color based on elevation
-    // color = mix(color, vec3(1.0), vElevation * 0.2);
-    gl_FragColor = vec4(color, 1.0);
+    
+    // Normalize elevation (0 to 1 based on mountain height)
+    float normalizedHeight = vElevation / uMountainHeight;
+    
+    // Calculate opacity: 0 at bottom, 1 at 0.4 (middle), and stays 1 above
+    float opacity = smoothstep(0.0, 0.6, normalizedHeight);
+    
+    gl_FragColor = vec4(color, opacity);
   }
 `;
+
 
 
 export default function Plane() {
@@ -127,8 +134,8 @@ export default function Plane() {
 
   const { color, gridWidth, gridHeight, noiseIntensity, mountainHeight, lineColor, lineSpeed, lineCount } = useControls({
     color: '#2e8fff',
-    gridWidth: { value: 30, min: 10, max: 100, step: 1 },
-    gridHeight: { value: 30, min: 10, max: 100, step: 1 },
+    gridWidth: { value: 70, min: 10, max: 100, step: 1 },
+    gridHeight: { value: 70, min: 10, max: 100, step: 1 },
     noiseIntensity: { value: 1., min: 0, max: 3, step: 0.1 },
     mountainHeight: { value: 4.0, min: 1, max: 10, step: 0.5 },
     lineColor: '#00ffff',
@@ -149,49 +156,18 @@ export default function Plane() {
     uniforms.current.uMountainHeight.value = mountainHeight;
   }, [color, noiseIntensity, mountainHeight]);
 
-  // Create custom grid lines (only horizontal and vertical, no diagonals)
-  const gridLines = useMemo(() => {
-    const geometry = new THREE.BufferGeometry();
-    const positions = [];
-
-    const width = 10;
-    const height = 10;
-    const segmentsX = gridWidth;
-    const segmentsY = gridHeight;
-
-    // Horizontal lines
-    for (let i = 0; i <= segmentsY; i++) {
-      const y = (i / segmentsY - 0.5) * height;
-      for (let j = 0; j < segmentsX; j++) {
-        const x1 = (j / segmentsX - 0.5) * width;
-        const x2 = ((j + 1) / segmentsX - 0.5) * width;
-        positions.push(x1, y, 0, x2, y, 0);
-      }
-    }
-
-    // Vertical lines
-    for (let i = 0; i <= segmentsX; i++) {
-      const x = (i / segmentsX - 0.5) * width;
-      for (let j = 0; j < segmentsY; j++) {
-        const y1 = (j / segmentsY - 0.5) * height;
-        const y2 = ((j + 1) / segmentsY - 0.5) * height;
-        positions.push(x, y1, 0, x, y2, 0);
-      }
-    }
-
-    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-    return geometry;
-  }, [gridWidth, gridHeight]);
-
   return (
     <>
-      <lineSegments ref={meshRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, -6]} geometry={gridLines}>
+      <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, -4]}>
+        <planeGeometry args={[10, 10, gridWidth, gridHeight]} />
         <shaderMaterial
           vertexShader={vertexShader}
           fragmentShader={fragmentShader}
           uniforms={uniforms.current}
+          wireframe
+          transparent
         />
-      </lineSegments>
+      </mesh>
     </>
   );
 }

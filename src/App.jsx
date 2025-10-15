@@ -45,7 +45,7 @@ function App() {
           <Grid />
           <Plane />
 
-          <Clouds material={CloudMaterial}>
+          {/* <Clouds material={CloudMaterial}>
             <Cloud
               position={[-cloudRadius, cloudHeight, 0]}
               speed={cloudSpeed}
@@ -61,7 +61,7 @@ function App() {
               color="grey"
               seed={1}
             />
-          </Clouds>
+          </Clouds> */}
 
 
           <EffectComposer>
