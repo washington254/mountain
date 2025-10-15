@@ -21,7 +21,7 @@ function App() {
   const { cloudRadius, cloudHeight, cloudScale, cloudOpacity, cloudSpeed, cloudColor, bloom } = useControls('Clouds', {
     cloudRadius: { value: 2., min: 3, max: 15, step: 0.5 },
     cloudHeight: { value: -.7, min: -2, max: 2, step: 0.1 },
-    cloudScale: { value: 0.19, min: 0.05, max: 1, step: 0.05 },
+    cloudScale: { value: 0.13, min: 0.05, max: 1, step: 0.05 },
     cloudOpacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
     cloudSpeed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
     cloudColor: '#4d4d6f',
