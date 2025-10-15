@@ -1,6 +1,6 @@
 import { Canvas, extend } from '@react-three/fiber';
 import { Cloud, Clouds } from '@react-three/drei';
-import { useControls } from 'leva';
+import { useControls, Leva } from 'leva';
 import { Bloom, EffectComposer, ToneMapping } from '@react-three/postprocessing';
 import * as THREE from 'three';
 
@@ -40,6 +40,7 @@ function App() {
       <div className="relative w-full h-screen">
         <Canvas flat shadows camera={{ position: [0, -.5, 6], fov: 40, far: 13 }}>
           <fog attach="fog" args={[fogColor, fogNear, fogFar]} />
+              <Leva hidden />
           {/* <OrbitControls/> */}
           <ambientLight intensity={Math.PI / 2} />
           <Grid />
