@@ -40,7 +40,7 @@ function App() {
       <div className="relative w-full h-screen">
         <Canvas flat shadows camera={{ position: [0, -.5, 6], fov: 40, far: 13 }}>
           <fog attach="fog" args={[fogColor, fogNear, fogFar]} />
-              <Leva hidden />
+              {/* <Leva hidden /> */}
           {/* <OrbitControls/> */}
           <ambientLight intensity={Math.PI / 2} />
           <Grid />
