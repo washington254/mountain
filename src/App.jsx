@@ -1,6 +1,6 @@
 import { Canvas, extend } from '@react-three/fiber';
 import { Cloud, Clouds } from '@react-three/drei';
-import { useControls, Leva } from 'leva';
+import { useControls } from 'leva';
 import { Bloom, EffectComposer, ToneMapping } from '@react-three/postprocessing';
 import * as THREE from 'three';
 
@@ -18,8 +18,8 @@ extend({ CloudMaterial });
 
 function App() {
 
-  const { cloudRadius, cloudHeight, cloudScale, cloudOpacity, cloudSpeed, cloudColor, bloom } = useControls('Clouds', {
-    cloudRadius: { value: 2., min: 3, max: 15, step: 0.5 },
+  const { numClouds, cloudHeight, cloudScale, cloudOpacity, cloudSpeed, cloudColor, bloom } = useControls('Clouds', {
+    numClouds: { value: 2, min: 1, max: 10, step: 1 },
     cloudHeight: { value: -.7, min: -2, max: 2, step: 0.1 },
     cloudScale: { value: 0.13, min: 0.05, max: 1, step: 0.05 },
     cloudOpacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
@@ -27,6 +27,79 @@ function App() {
     cloudColor: '#4d4d6f',
     bloom: { value: 4, min: 0, max: 5, step: 0.1 }
   });
+
+  // Individual cloud controls
+  const cloud1 = useControls('Cloud 1', {
+    posX: { value: -2, min: -10, max: 10, step: 0.1 },
+    posY: { value: 0, min: -10, max: 10, step: 0.1 },
+    posZ: { value: 0, min: -10, max: 10, step: 0.1 },
+    seed: { value: 1, min: 1, max: 100, step: 1 }
+  });
+
+  const cloud2 = useControls('Cloud 2', {
+    posX: { value: 2, min: -10, max: 10, step: 0.1 },
+    posY: { value: 0, min: -10, max: 10, step: 0.1 },
+    posZ: { value: 0, min: -10, max: 10, step: 0.1 },
+    seed: { value: 2, min: 1, max: 100, step: 1 }
+  });
+
+  const cloud3 = useControls('Cloud 3', {
+    posX: { value: 0, min: -10, max: 10, step: 0.1 },
+    posY: { value: 2, min: -10, max: 10, step: 0.1 },
+    posZ: { value: -2, min: -10, max: 10, step: 0.1 },
+    seed: { value: 3, min: 1, max: 100, step: 1 }
+  });
+
+  const cloud4 = useControls('Cloud 4', {
+    posX: { value: 0, min: -10, max: 10, step: 0.1 },
+    posY: { value: -2, min: -10, max: 10, step: 0.1 },
+    posZ: { value: 2, min: -10, max: 10, step: 0.1 },
+    seed: { value: 4, min: 1, max: 100, step: 1 }
+  });
+
+  const cloud5 = useControls('Cloud 5', {
+    posX: { value: 3, min: -10, max: 10, step: 0.1 },
+    posY: { value: 1, min: -10, max: 10, step: 0.1 },
+    posZ: { value: -1, min: -10, max: 10, step: 0.1 },
+    seed: { value: 5, min: 1, max: 100, step: 1 }
+  });
+
+  const cloud6 = useControls('Cloud 6', {
+    posX: { value: -3, min: -10, max: 10, step: 0.1 },
+    posY: { value: -1, min: -10, max: 10, step: 0.1 },
+    posZ: { value: 1, min: -10, max: 10, step: 0.1 },
+    seed: { value: 6, min: 1, max: 100, step: 1 }
+  });
+
+  const cloud7 = useControls('Cloud 7', {
+    posX: { value: 1, min: -10, max: 10, step: 0.1 },
+    posY: { value: 3, min: -10, max: 10, step: 0.1 },
+    posZ: { value: -3, min: -10, max: 10, step: 0.1 },
+    seed: { value: 7, min: 1, max: 100, step: 1 }
+  });
+
+  const cloud8 = useControls('Cloud 8', {
+    posX: { value: -1, min: -10, max: 10, step: 0.1 },
+    posY: { value: -3, min: -10, max: 10, step: 0.1 },
+    posZ: { value: 3, min: -10, max: 10, step: 0.1 },
+    seed: { value: 8, min: 1, max: 100, step: 1 }
+  });
+
+  const cloud9 = useControls('Cloud 9', {
+    posX: { value: 4, min: -10, max: 10, step: 0.1 },
+    posY: { value: 0, min: -10, max: 10, step: 0.1 },
+    posZ: { value: 0, min: -10, max: 10, step: 0.1 },
+    seed: { value: 9, min: 1, max: 100, step: 1 }
+  });
+
+  const cloud10 = useControls('Cloud 10', {
+    posX: { value: -4, min: -10, max: 10, step: 0.1 },
+    posY: { value: 0, min: -10, max: 10, step: 0.1 },
+    posZ: { value: 0, min: -10, max: 10, step: 0.1 },
+    seed: { value: 10, min: 1, max: 100, step: 1 }
+  });
+
+  const cloudConfigs = [cloud1, cloud2, cloud3, cloud4, cloud5, cloud6, cloud7, cloud8, cloud9, cloud10];
 
 
   const { fogColor, fogNear, fogFar } = useControls('Fog', {
@@ -40,29 +113,24 @@ function App() {
       <div className="relative w-full h-screen">
         <Canvas flat shadows camera={{ position: [0, -.5, 6], fov: 40, far: 13 }}>
           <fog attach="fog" args={[fogColor, fogNear, fogFar]} />
-              {/* <Leva hidden /> */}
+          {/* <Leva hidden /> */}
           {/* <OrbitControls/> */}
           <ambientLight intensity={Math.PI / 2} />
           <Grid />
           <Plane />
 
           <Clouds material={CloudMaterial}>
-            <Cloud
-              position={[-cloudRadius, cloudHeight, 0]}
-              speed={cloudSpeed}
-              opacity={cloudOpacity}
-              scale={[cloudScale, cloudScale, cloudScale]}
-              color={cloudColor}
-              seed={1}
-            />
-            <Cloud
-              position={[cloudRadius, cloudHeight, 0]}
-              speed={cloudSpeed}
-              opacity={cloudOpacity}
-              scale={[cloudScale, cloudScale, cloudScale]}
-              color={cloudColor}
-              seed={1}
-            />
+            {cloudConfigs.slice(0, numClouds).map((config, index) => (
+              <Cloud
+                key={index}
+                position={[config.posX, config.posY + cloudHeight, config.posZ]}
+                speed={cloudSpeed}
+                opacity={cloudOpacity}
+                scale={[cloudScale, cloudScale, cloudScale]}
+                color={cloudColor}
+                seed={config.seed}
+              />
+            ))}
           </Clouds>
 
 
