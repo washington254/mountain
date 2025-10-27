@@ -19,7 +19,7 @@ extend({ CloudMaterial });
 function App() {
 
   const { numClouds, cloudHeight, cloudScale, cloudOpacity, cloudSpeed, cloudColor, bloom } = useControls('Clouds', {
-    numClouds: { value: 2, min: 1, max: 10, step: 1 },
+    numClouds: { value: 6, min: 1, max: 10, step: 1 },
     cloudHeight: { value: -.7, min: -2, max: 2, step: 0.1 },
     cloudScale: { value: 0.13, min: 0.05, max: 1, step: 0.05 },
     cloudOpacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
@@ -30,68 +30,68 @@ function App() {
 
   // Individual cloud controls with full customization
   const cloud1 = useControls('Cloud 1', {
-    posX: { value: -2, min: -10, max: 10, step: 0.1 },
-    posY: { value: 0, min: -10, max: 10, step: 0.1 },
-    posZ: { value: 0, min: -10, max: 10, step: 0.1 },
+    posX: { value: -2.4, min: -10, max: 10, step: 0.1 },
+    posY: { value: -0.1, min: -10, max: 10, step: 0.1 },
+    posZ: { value: -1.3, min: -10, max: 10, step: 0.1 },
     scale: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
     color: '#4d4d6f',
-    opacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
-    speed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
-    seed: { value: 1, min: 1, max: 100, step: 1 }
+    opacity: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
+    speed: { value: 0.4, min: 0.1, max: 1, step: 0.05 },
+    seed: { value: 23, min: 1, max: 100, step: 1 }
   });
 
   const cloud2 = useControls('Cloud 2', {
-    posX: { value: 2, min: -10, max: 10, step: 0.1 },
+    posX: { value: -0.8, min: -10, max: 10, step: 0.1 },
     posY: { value: 0, min: -10, max: 10, step: 0.1 },
-    posZ: { value: 0, min: -10, max: 10, step: 0.1 },
+    posZ: { value: -0.9, min: -10, max: 10, step: 0.1 },
     scale: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
     color: '#4d4d6f',
-    opacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
-    speed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
-    seed: { value: 2, min: 1, max: 100, step: 1 }
+    opacity: { value: 0.17, min: 0.1, max: 1, step: 0.05 },
+    speed: { value: 0.3, min: 0.1, max: 1, step: 0.05 },
+    seed: { value: 11, min: 1, max: 100, step: 1 }
   });
 
   const cloud3 = useControls('Cloud 3', {
-    posX: { value: 0, min: -10, max: 10, step: 0.1 },
-    posY: { value: 2, min: -10, max: 10, step: 0.1 },
-    posZ: { value: -2, min: -10, max: 10, step: 0.1 },
+    posX: { value: 2.6, min: -10, max: 10, step: 0.1 },
+    posY: { value: -0.1, min: -10, max: 10, step: 0.1 },
+    posZ: { value: -1.9, min: -10, max: 10, step: 0.1 },
     scale: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
     color: '#4d4d6f',
-    opacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
-    speed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
+    opacity: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
+    speed: { value: 0.35, min: 0.1, max: 1, step: 0.05 },
     seed: { value: 3, min: 1, max: 100, step: 1 }
   });
 
   const cloud4 = useControls('Cloud 4', {
-    posX: { value: 0, min: -10, max: 10, step: 0.1 },
-    posY: { value: -2, min: -10, max: 10, step: 0.1 },
-    posZ: { value: 2, min: -10, max: 10, step: 0.1 },
+    posX: { value: 1.1, min: -10, max: 10, step: 0.1 },
+    posY: { value: 0, min: -10, max: 10, step: 0.1 },
+    posZ: { value: -0.1, min: -10, max: 10, step: 0.1 },
     scale: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
     color: '#4d4d6f',
-    opacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
+    opacity: { value: 0.3, min: 0.1, max: 1, step: 0.05 },
     speed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
     seed: { value: 4, min: 1, max: 100, step: 1 }
   });
 
   const cloud5 = useControls('Cloud 5', {
-    posX: { value: 3, min: -10, max: 10, step: 0.1 },
-    posY: { value: 1, min: -10, max: 10, step: 0.1 },
-    posZ: { value: -1, min: -10, max: 10, step: 0.1 },
+    posX: { value: 4.3, min: -10, max: 10, step: 0.1 },
+    posY: { value: 0.3, min: -10, max: 10, step: 0.1 },
+    posZ: { value: -5.2, min: -10, max: 10, step: 0.1 },
     scale: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
     color: '#4d4d6f',
-    opacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
+    opacity: { value: 0.25, min: 0.1, max: 1, step: 0.05 },
     speed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
     seed: { value: 5, min: 1, max: 100, step: 1 }
   });
 
   const cloud6 = useControls('Cloud 6', {
-    posX: { value: -3, min: -10, max: 10, step: 0.1 },
-    posY: { value: -1, min: -10, max: 10, step: 0.1 },
-    posZ: { value: 1, min: -10, max: 10, step: 0.1 },
+    posX: { value: -4.1, min: -10, max: 10, step: 0.1 },
+    posY: { value: 0.2, min: -10, max: 10, step: 0.1 },
+    posZ: { value: -4.5, min: -10, max: 10, step: 0.1 },
     scale: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
     color: '#4d4d6f',
-    opacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
-    speed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
+    opacity: { value: 0.35, min: 0.1, max: 1, step: 0.05 },
+    speed: { value: 0.6, min: 0.1, max: 1, step: 0.05 },
     seed: { value: 6, min: 1, max: 100, step: 1 }
   });
 
