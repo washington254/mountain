@@ -28,11 +28,17 @@ function App() {
     bloom: { value: 4, min: 0, max: 5, step: 0.1 }
   });
 
-  // Individual cloud controls
+  // Individual cloud controls with full customization
   const cloud1 = useControls('Cloud 1', {
     posX: { value: -2, min: -10, max: 10, step: 0.1 },
     posY: { value: 0, min: -10, max: 10, step: 0.1 },
     posZ: { value: 0, min: -10, max: 10, step: 0.1 },
+    scaleX: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleY: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleZ: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    color: '#4d4d6f',
+    opacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
+    speed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
     seed: { value: 1, min: 1, max: 100, step: 1 }
   });
 
@@ -40,6 +46,12 @@ function App() {
     posX: { value: 2, min: -10, max: 10, step: 0.1 },
     posY: { value: 0, min: -10, max: 10, step: 0.1 },
     posZ: { value: 0, min: -10, max: 10, step: 0.1 },
+    scaleX: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleY: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleZ: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    color: '#4d4d6f',
+    opacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
+    speed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
     seed: { value: 2, min: 1, max: 100, step: 1 }
   });
 
@@ -47,6 +59,12 @@ function App() {
     posX: { value: 0, min: -10, max: 10, step: 0.1 },
     posY: { value: 2, min: -10, max: 10, step: 0.1 },
     posZ: { value: -2, min: -10, max: 10, step: 0.1 },
+    scaleX: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleY: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleZ: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    color: '#4d4d6f',
+    opacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
+    speed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
     seed: { value: 3, min: 1, max: 100, step: 1 }
   });
 
@@ -54,6 +72,12 @@ function App() {
     posX: { value: 0, min: -10, max: 10, step: 0.1 },
     posY: { value: -2, min: -10, max: 10, step: 0.1 },
     posZ: { value: 2, min: -10, max: 10, step: 0.1 },
+    scaleX: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleY: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleZ: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    color: '#4d4d6f',
+    opacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
+    speed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
     seed: { value: 4, min: 1, max: 100, step: 1 }
   });
 
@@ -61,6 +85,12 @@ function App() {
     posX: { value: 3, min: -10, max: 10, step: 0.1 },
     posY: { value: 1, min: -10, max: 10, step: 0.1 },
     posZ: { value: -1, min: -10, max: 10, step: 0.1 },
+    scaleX: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleY: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleZ: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    color: '#4d4d6f',
+    opacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
+    speed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
     seed: { value: 5, min: 1, max: 100, step: 1 }
   });
 
@@ -68,6 +98,12 @@ function App() {
     posX: { value: -3, min: -10, max: 10, step: 0.1 },
     posY: { value: -1, min: -10, max: 10, step: 0.1 },
     posZ: { value: 1, min: -10, max: 10, step: 0.1 },
+    scaleX: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleY: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleZ: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    color: '#4d4d6f',
+    opacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
+    speed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
     seed: { value: 6, min: 1, max: 100, step: 1 }
   });
 
@@ -75,6 +111,12 @@ function App() {
     posX: { value: 1, min: -10, max: 10, step: 0.1 },
     posY: { value: 3, min: -10, max: 10, step: 0.1 },
     posZ: { value: -3, min: -10, max: 10, step: 0.1 },
+    scaleX: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleY: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleZ: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    color: '#4d4d6f',
+    opacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
+    speed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
     seed: { value: 7, min: 1, max: 100, step: 1 }
   });
 
@@ -82,6 +124,12 @@ function App() {
     posX: { value: -1, min: -10, max: 10, step: 0.1 },
     posY: { value: -3, min: -10, max: 10, step: 0.1 },
     posZ: { value: 3, min: -10, max: 10, step: 0.1 },
+    scaleX: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleY: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleZ: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    color: '#4d4d6f',
+    opacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
+    speed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
     seed: { value: 8, min: 1, max: 100, step: 1 }
   });
 
@@ -89,6 +137,12 @@ function App() {
     posX: { value: 4, min: -10, max: 10, step: 0.1 },
     posY: { value: 0, min: -10, max: 10, step: 0.1 },
     posZ: { value: 0, min: -10, max: 10, step: 0.1 },
+    scaleX: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleY: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleZ: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    color: '#4d4d6f',
+    opacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
+    speed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
     seed: { value: 9, min: 1, max: 100, step: 1 }
   });
 
@@ -96,6 +150,12 @@ function App() {
     posX: { value: -4, min: -10, max: 10, step: 0.1 },
     posY: { value: 0, min: -10, max: 10, step: 0.1 },
     posZ: { value: 0, min: -10, max: 10, step: 0.1 },
+    scaleX: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleY: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    scaleZ: { value: 0.13, min: 0.05, max: 2, step: 0.05 },
+    color: '#4d4d6f',
+    opacity: { value: 0.9, min: 0.1, max: 1, step: 0.05 },
+    speed: { value: 0.2, min: 0.1, max: 1, step: 0.05 },
     seed: { value: 10, min: 1, max: 100, step: 1 }
   });
 
@@ -124,10 +184,10 @@ function App() {
               <Cloud
                 key={index}
                 position={[config.posX, config.posY + cloudHeight, config.posZ]}
-                speed={cloudSpeed}
-                opacity={cloudOpacity}
-                scale={[cloudScale, cloudScale, cloudScale]}
-                color={cloudColor}
+                speed={config.speed}
+                opacity={config.opacity}
+                scale={[config.scaleX, config.scaleY, config.scaleZ]}
+                color={config.color}
                 seed={config.seed}
               />
             ))}
